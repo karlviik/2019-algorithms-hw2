@@ -18,7 +18,7 @@ public class HW02 implements TrampolineCenter {
 			int jump = map[coords[0]][coords[1]];  // jump value of the jumpy jump
 			int newFirst = coords[0] + jump;  // new first coordinate
 			int newSecond = coords[1] + jump;  // new second coordinate
-			if (newFirst < size && dist[newFirst][coords[1]] == 0) {  // if not out of bounds and node not visited
+			if (newFirst < size && from[newFirst][coords[1]].length == 0) {  // if not out of bounds and node not visited
 				from[newFirst][coords[1]] = coords;  // save the current coords to the from of new coords
 				dist[newFirst][coords[1]] = dist[coords[0]][coords[1]] + 1;
 				queue.add(new int[]{newFirst, coords[1]});  // add this new node to the queue
@@ -26,7 +26,7 @@ public class HW02 implements TrampolineCenter {
 					break;
 				}
 			}
-			if (newSecond < size && dist[coords[0]][newSecond] == 0) {  // if not out of bounds and node not visited
+			if (newSecond < size && from[coords[0]][newSecond].length == 0) {  // if not out of bounds and node not visited
 				from[coords[0]][newSecond] = coords;  // save the current coords to the from of new coords
 				dist[coords[0]][newSecond] = dist[coords[0]][coords[1]] + 1;
 				queue.add(new int[]{coords[0], newSecond});  // add this new node to the queue
