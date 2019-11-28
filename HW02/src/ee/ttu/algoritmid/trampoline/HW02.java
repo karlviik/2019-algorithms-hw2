@@ -121,11 +121,11 @@ public class HW02 implements TrampolineCenter {
 			int[] coords = queue.poll();
 			int jump = map[coords[0]][coords[1]];  // jump value of the jumpy jump
 			int newFirst = coords[0] + jump;  // new first coordinate
-			int newFirstPlus = newFirst++;
-			int newFirstMinus = newFirst--;
+			int newFirstPlus = newFirst + 1;
+			int newFirstMinus = newFirst - 1;
 			int newSecond = coords[1] + jump;  // new second coordinate
-			int newSecondPlus = newSecond++;
-			int newSecondMinus = newSecond--;
+			int newSecondPlus = newSecond + 1;
+			int newSecondMinus = newSecond - 1;
 			if (newFirstPlus < size && from[newFirstPlus][coords[1]] == null) {  // if not out of bounds and node not visited
 				from[newFirstPlus][coords[1]] = coords;  // save the current coords to the from of new coords
 				queue.add(new int[]{newFirstPlus, coords[1]});  // add this new node to the queue
@@ -188,6 +188,7 @@ public class HW02 implements TrampolineCenter {
 			return answer;
 		}
 		else {  // solution was not found, null I guess
+			System.out.println("no solution?");
 			return null;
 		}
 	}
@@ -198,7 +199,7 @@ public class HW02 implements TrampolineCenter {
 	}
 
 	public static void main(String[] args) {
-		int[][] map = new int[][]{{1, 2, 2}, {2, 10, 1}, {3, 2, 0}};
+		int[][] map = new int[][]{{1, 2, 4}, {3, 10, 1}, {3, 2, 0}};
 		System.out.println(dijkstraApproxV1(map));
 	}
 }
