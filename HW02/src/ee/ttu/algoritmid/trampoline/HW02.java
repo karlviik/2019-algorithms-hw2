@@ -121,7 +121,7 @@ public class HW02 implements TrampolineCenter {
 			int[] coords = queue.poll();
 			int jump = map[coords[0]][coords[1]];  // jump value of the jumpy jump
 			int newFirst = coords[0] + jump + 1;  // new first coordinate
-			int newSecond = coords[1] + jump;  // new second coordinate
+			int newSecond = coords[1] + jump + 1;  // new second coordinate
 			boolean answerFound = false;
 			for (int i = 0; i < 3; i++) {
 				if (newFirst < size && from[newFirst][coords[1]] == null) {  // if not out of bounds and node not visited
