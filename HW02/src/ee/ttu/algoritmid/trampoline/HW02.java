@@ -4,7 +4,7 @@ import java.util.*;
 
 public class HW02 implements TrampolineCenter {
 
-	private static List<String> dijkstraEqual(int[][] map) {
+	private static List<String> dijkstraEqualV1(int[][] map) {
 		if (map.length == 1) {
 			return new ArrayList<>();
 		}
@@ -109,13 +109,96 @@ public class HW02 implements TrampolineCenter {
 		}
 	}
 
+	private static List<String> dijkstraApproxV1(int[][] map) {
+		if (map.length == 1) {
+			return new ArrayList<>();
+		}
+		int size = map.length;  // edge length of the map
+		int[][][] from = new int[size][size][];  // array for storing the coordinates from which this coordinate was reached from
+		ArrayDeque<int[]> queue = new ArrayDeque<>();  // queue for storing next node
+		queue.add(new int[]{0, 0});  // throw starting point to queue
+		while (!queue.isEmpty()) {
+			int[] coords = queue.poll();
+			int jump = map[coords[0]][coords[1]];  // jump value of the jumpy jump
+			int newFirst = coords[0] + jump;  // new first coordinate
+			int newFirstPlus = newFirst++;
+			int newFirstMinus = newFirst--;
+			int newSecond = coords[1] + jump;  // new second coordinate
+			int newSecondPlus = newSecond++;
+			int newSecondMinus = newSecond--;
+			if (newFirst < size && from[newFirst][coords[1]] == null) {  // if not out of bounds and node not visited
+				from[newFirst][coords[1]] = coords;  // save the current coords to the from of new coords
+				queue.add(new int[]{newFirst, coords[1]});  // add this new node to the queue
+				if (newFirst == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
+					break;
+				}
+			}
+			if (newFirstPlus < size && from[newFirstPlus][coords[1]] == null) {  // if not out of bounds and node not visited
+				from[newFirstPlus][coords[1]] = coords;  // save the current coords to the from of new coords
+				queue.add(new int[]{newFirstPlus, coords[1]});  // add this new node to the queue
+				if (newFirstPlus == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
+					break;
+				}
+			}
+			if (newFirstMinus < size && from[newFirstMinus][coords[1]] == null) {  // if not out of bounds and node not visited
+				from[newFirstMinus][coords[1]] = coords;  // save the current coords to the from of new coords
+				queue.add(new int[]{newFirstMinus, coords[1]});  // add this new node to the queue
+				if (newFirstMinus == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
+					break;
+				}
+			}
+			if (newSecond < size && from[coords[0]][newSecond] == null) {  // if not out of bounds and node not visited
+				from[coords[0]][newSecond] = coords;  // save the current coords to the from of new coords
+				queue.add(new int[]{coords[0], newSecond});  // add this new node to the queue
+				if (coords[0] == (size - 1) && newSecond == (size - 1)) {  // if has reached the end, break out
+					break;
+				}
+			}
+			if (newSecondPlus < size && from[coords[0]][newSecondPlus] == null) {  // if not out of bounds and node not visited
+				from[coords[0]][newSecondPlus] = coords;  // save the current coords to the from of new coords
+				queue.add(new int[]{coords[0], newSecondPlus});  // add this new node to the queue
+				if (coords[0] == (size - 1) && newSecondPlus == (size - 1)) {  // if has reached the end, break out
+					break;
+				}
+			}
+			if (newSecondMinus < size && from[coords[0]][newSecondMinus] == null) {  // if not out of bounds and node not visited
+				from[coords[0]][newSecondMinus] = coords;  // save the current coords to the from of new coords
+				queue.add(new int[]{coords[0], newSecondMinus});  // add this new node to the queue
+				if (coords[0] == (size - 1) && newSecondMinus == (size - 1)) {  // if has reached the end, break out
+					break;
+				}
+			}
+		}
+		if (!queue.isEmpty()) {  // solution was found
+			LinkedList<String> answer = new LinkedList<>();
+			int[] coords = new int[]{size - 1, size - 1};
+			while (true) {
+				int[] fromcoords = from[coords[0]][coords[1]];
+				if (fromcoords[0] == coords[0]) {
+					answer.push("E" + (coords[1] - fromcoords[1]));
+				}
+				else {
+					answer.push("S" + (coords[0] - fromcoords[0]));
+				}
+				coords = fromcoords;
+				if (fromcoords[0] == 0 && fromcoords[1] == 0) {
+					break;
+				}
+			}
+			return answer;
+		}
+		else {  // solution was not found, null I guess
+			return null;
+		}
+	}
+
 	@Override
 	public List<String> findMinJumps(int[][] map) {
-		return dijkstraEqualV2(map);
+		return dijkstraApproxV1(map);
 	}
 
 	public static void main(String[] args) {
 		int[][] map = new int[][]{{1, 2, 2}, {2, 10, 1}, {3, 2, 0}};
-		System.out.println(dijkstraEqualV2(map));
+		System.out.println(dijkstraApproxV1(map));
 	}
 }
