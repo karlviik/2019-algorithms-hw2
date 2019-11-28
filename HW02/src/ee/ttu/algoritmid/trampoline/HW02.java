@@ -1,9 +1,6 @@
 package ee.ttu.algoritmid.trampoline;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class HW02 implements TrampolineCenter {
 
@@ -38,7 +35,6 @@ public class HW02 implements TrampolineCenter {
 				}
 			}
 		}
-		System.out.println("I reached");
 		if (!queue.isEmpty()) {  // solution was found
 			LinkedList<String> answer = new LinkedList<>();
 			int[] coords = new int[]{size - 1, size - 1};
@@ -50,6 +46,7 @@ public class HW02 implements TrampolineCenter {
 				else {
 					answer.push("E" + (coords[0] - fromcoords[0]));
 				}
+				coords = fromcoords;
 				if (fromcoords[0] == 0 && fromcoords[1] == 0) {
 					break;
 				}
