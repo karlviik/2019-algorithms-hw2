@@ -120,53 +120,31 @@ public class HW02 implements TrampolineCenter {
 		while (!queue.isEmpty()) {
 			int[] coords = queue.poll();
 			int jump = map[coords[0]][coords[1]];  // jump value of the jumpy jump
-			int newFirst = coords[0] + jump;  // new first coordinate
-			int newFirstPlus = newFirst + 1;
-			int newFirstMinus = newFirst - 1;
+			int newFirst = coords[0] + jump + 1;  // new first coordinate
 			int newSecond = coords[1] + jump;  // new second coordinate
-			int newSecondPlus = newSecond + 1;
-			int newSecondMinus = newSecond - 1;
-			if (newFirstPlus < size && from[newFirstPlus][coords[1]] == null) {  // if not out of bounds and node not visited
-				from[newFirstPlus][coords[1]] = coords;  // save the current coords to the from of new coords
-				queue.add(new int[]{newFirstPlus, coords[1]});  // add this new node to the queue
-				if (newFirstPlus == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
-					break;
+			boolean answerFound = false;
+			for (int i = 0; i < 3; i++) {
+				if (newFirst < size && from[newFirst][coords[1]] == null) {  // if not out of bounds and node not visited
+					from[newFirst][coords[1]] = coords;  // save the current coords to the from of new coords
+					queue.add(new int[]{newFirst, coords[1]});  // add this new node to the queue
+					if (newFirst == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
+						answerFound = true;
+						break;
+					}
 				}
+				if (newSecond < size && from[coords[0]][newSecond] == null) {  // if not out of bounds and node not visited
+					from[coords[0]][newSecond] = coords;  // save the current coords to the from of new coords
+					queue.add(new int[]{coords[0], newSecond});  // add this new node to the queue
+					if (coords[0] == (size - 1) && newSecond == (size - 1)) {  // if has reached the end, break out
+						answerFound = true;
+						break;
+					}
+				}
+				newFirst--;
+				newSecond--;
 			}
-			if (newFirst < size && from[newFirst][coords[1]] == null) {  // if not out of bounds and node not visited
-				from[newFirst][coords[1]] = coords;  // save the current coords to the from of new coords
-				queue.add(new int[]{newFirst, coords[1]});  // add this new node to the queue
-				if (newFirst == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
-					break;
-				}
-			}
-			if (newFirstMinus < size && from[newFirstMinus][coords[1]] == null) {  // if not out of bounds and node not visited
-				from[newFirstMinus][coords[1]] = coords;  // save the current coords to the from of new coords
-				queue.add(new int[]{newFirstMinus, coords[1]});  // add this new node to the queue
-				if (newFirstMinus == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
-					break;
-				}
-			}
-			if (newSecondPlus < size && from[coords[0]][newSecondPlus] == null) {  // if not out of bounds and node not visited
-				from[coords[0]][newSecondPlus] = coords;  // save the current coords to the from of new coords
-				queue.add(new int[]{coords[0], newSecondPlus});  // add this new node to the queue
-				if (coords[0] == (size - 1) && newSecondPlus == (size - 1)) {  // if has reached the end, break out
-					break;
-				}
-			}
-			if (newSecond < size && from[coords[0]][newSecond] == null) {  // if not out of bounds and node not visited
-				from[coords[0]][newSecond] = coords;  // save the current coords to the from of new coords
-				queue.add(new int[]{coords[0], newSecond});  // add this new node to the queue
-				if (coords[0] == (size - 1) && newSecond == (size - 1)) {  // if has reached the end, break out
-					break;
-				}
-			}
-			if (newSecondMinus < size && from[coords[0]][newSecondMinus] == null) {  // if not out of bounds and node not visited
-				from[coords[0]][newSecondMinus] = coords;  // save the current coords to the from of new coords
-				queue.add(new int[]{coords[0], newSecondMinus});  // add this new node to the queue
-				if (coords[0] == (size - 1) && newSecondMinus == (size - 1)) {  // if has reached the end, break out
-					break;
-				}
+			if (answerFound) {
+				break;
 			}
 		}
 		if (!queue.isEmpty()) {  // solution was found
