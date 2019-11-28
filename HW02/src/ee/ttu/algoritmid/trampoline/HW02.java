@@ -41,10 +41,10 @@ public class HW02 implements TrampolineCenter {
 			while (true) {
 				int[] fromcoords = from[coords[0]][coords[1]];
 				if (fromcoords[0] == coords[0]) {
-					answer.push("S" + (coords[1] - fromcoords[1]));
+					answer.push("E" + (coords[1] - fromcoords[1]));
 				}
 				else {
-					answer.push("E" + (coords[0] - fromcoords[0]));
+					answer.push("S" + (coords[0] - fromcoords[0]));
 				}
 				coords = fromcoords;
 				if (fromcoords[0] == 0 && fromcoords[1] == 0) {
@@ -64,7 +64,7 @@ public class HW02 implements TrampolineCenter {
 	}
 
 	public static void main(String[] args) {
-		int[][] map = new int[][]{{1, 1}, {1, 1}};
+		int[][] map = new int[][]{{1, 2, 2}, {2, 10, 1}, {3, 2, 0}};
 		System.out.println(dijkstraEqual(map));
 	}
 }
