@@ -4,169 +4,292 @@ import java.util.*;
 
 public class HW02 implements TrampolineCenter {
 
+	private static List<String> dijkstraAnswerBuilder(int size, int[][][] from) {
+		// initialize answer array as linked list
+		LinkedList<String> answer = new LinkedList<>();
+
+		// make starting coords the end coordinates
+		int[] coords = new int[]{size - 1, size - 1};
+
+		while (true) {
+
+			// get the "from" coordinates of current coords
+			int[] fromcoords = from[coords[0]][coords[1]];
+
+			// if there was no change in the vertical coordinates
+			if (fromcoords[0] == coords[0]) {
+
+				// push to the start of answer list a string of East and the change in horizontal coordinates
+				answer.push("E" + (coords[1] - fromcoords[1]));
+			}
+
+			// if there was no change in horizontal coordinates
+			else {
+
+				// push to the start of answer list a string of South and the change in vertical coordinates
+				answer.push("S" + (coords[0] - fromcoords[0]));
+			}
+
+			// make new current coordinates the "from" coordinates of this cycle
+			coords = fromcoords;
+
+			// if the current "from" coordinates are that of the starting coordinates, break out as answer has been built
+			if (fromcoords[0] == 0 && fromcoords[1] == 0) {
+				break;
+			}
+		}
+
+		return answer;
+	}
+
 	private static List<String> dijkstraEqualV1(int[][] map) {
+		// in case of map with size 0, return empty list
 		if (map.length == 1) {
 			return new ArrayList<>();
 		}
-		int size = map.length;  // edge length of the map
-		int[][] dist = new int[size][size];  // array for storing distances for corresponding map squares
-		int[][][] from = new int[size][size][2];  // array for storing the coordinates from which this coordinate was reached from
-		ArrayDeque<int[]> queue = new ArrayDeque<>();  // queue for storing next node
-		queue.add(new int[]{0, 0});  // throw starting point to queue
+
+		// edge length
+		int size = map.length;
+
+		// storing distance to corresponding coordinates
+		int[][] dist = new int[size][size];
+
+		// storing coordinate from which you can get to corresponding coordinate
+		int[][][] from = new int[size][size][2];
+
+		// storing next coordinate to check
+		ArrayDeque<int[]> queue = new ArrayDeque<>();
+
+		// add starting coordinate to queue
+		queue.add(new int[]{0, 0});
+
+		// while there are nodes to check
 		while (!queue.isEmpty()) {
+
+			// get first coord from queue
 			int[] coords = queue.poll();
-			int jump = map[coords[0]][coords[1]];  // jump value of the jumpy jump
-			int newFirst = coords[0] + jump;  // new first coordinate
-			int newSecond = coords[1] + jump;  // new second coordinate
-			if (newFirst < size && dist[newFirst][coords[1]] == 0) {  // if not out of bounds and node not visited
-				from[newFirst][coords[1]] = coords;  // save the current coords to the from of new coords
-				dist[newFirst][coords[1]] = dist[coords[0]][coords[1]] + 1;
-				queue.add(new int[]{newFirst, coords[1]});  // add this new node to the queue
-				if (newFirst == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
+
+			// get jump value from said coordinate on map
+			int jump = map[coords[0]][coords[1]];
+
+			// calculate new vertical coordinate
+			int newVertical = coords[0] + jump;
+
+			// calculate new horizontal coordinate
+			int newHorizontal = coords[1] + jump;
+
+			// if new vertical coordinate doesn't jump over the edge and the target coordinates haven't been visited
+			if (newVertical < size && dist[newVertical][coords[1]] == 0) {
+
+				// save current coords to the "from" of new coords
+				from[newVertical][coords[1]] = coords;
+
+				// make the distance of target coords the distance of current coords plus one
+				dist[newVertical][coords[1]] = dist[coords[0]][coords[1]] + 1;
+
+				// add new coords to the end of the queue
+				queue.add(new int[]{newVertical, coords[1]});
+
+				// if the new coordinates are the end coordinates, break out
+				if (newVertical == (size - 1) && coords[1] == (size - 1)) {
 					break;
 				}
 			}
-			if (newSecond < size && dist[coords[0]][newSecond] == 0) {  // if not out of bounds and node not visited
-				from[coords[0]][newSecond] = coords;  // save the current coords to the from of new coords
-				dist[coords[0]][newSecond] = dist[coords[0]][coords[1]] + 1;
-				queue.add(new int[]{coords[0], newSecond});  // add this new node to the queue
-				if (coords[0] == (size - 1) && newSecond == (size - 1)) {  // if has reached the end, break out
+
+			// if new horizontal coordinate doesn't jump over the edge and the target coordinates haven't been visited
+			if (newHorizontal < size && dist[coords[0]][newHorizontal] == 0) {
+
+				// save current coords to the "from" of new coords
+				from[coords[0]][newHorizontal] = coords;
+
+				// make the distance of target coords the distance of current coords plus one
+				dist[coords[0]][newHorizontal] = dist[coords[0]][coords[1]] + 1;
+
+				// add new coords to the end of the queue
+				queue.add(new int[]{coords[0], newHorizontal});
+
+				// if the new coordinates are the end coordinates, break out
+				if (coords[0] == (size - 1) && newHorizontal == (size - 1)) {
 					break;
 				}
 			}
 		}
-		if (!queue.isEmpty()) {  // solution was found
-			LinkedList<String> answer = new LinkedList<>();
-			int[] coords = new int[]{size - 1, size - 1};
-			while (true) {
-				int[] fromcoords = from[coords[0]][coords[1]];
-				if (fromcoords[0] == coords[0]) {
-					answer.push("E" + (coords[1] - fromcoords[1]));
-				}
-				else {
-					answer.push("S" + (coords[0] - fromcoords[0]));
-				}
-				coords = fromcoords;
-				if (fromcoords[0] == 0 && fromcoords[1] == 0) {
-					break;
-				}
-			}
-			return answer;
+
+		// solution was found
+		if (!queue.isEmpty()) {
+			return dijkstraAnswerBuilder(size, from);
 		}
-		else {  // solution was not found, null I guess
+
+		// solution wasn't found
+		else {
 			return null;
 		}
 	}
 
 	private static List<String> dijkstraEqualV2(int[][] map) {
+		// in case of map with size 0, return empty list
 		if (map.length == 1) {
 			return new ArrayList<>();
 		}
-		int size = map.length;  // edge length of the map
-		int[][][] from = new int[size][size][];  // array for storing the coordinates from which this coordinate was reached from
-		ArrayDeque<int[]> queue = new ArrayDeque<>();  // queue for storing next node
-		queue.add(new int[]{0, 0});  // throw starting point to queue
+
+		// edge length
+		int size = map.length;
+
+		// storing coordinate from which you can get to corresponding coordinate
+		int[][][] from = new int[size][size][];
+
+		// storing next coordinate to check
+		ArrayDeque<int[]> queue = new ArrayDeque<>();
+
+		// add starting coordinate to queue
+		queue.add(new int[]{0, 0});
+
+		// while there are nodes to check
 		while (!queue.isEmpty()) {
+
+			// get first coord from queue
 			int[] coords = queue.poll();
-			int jump = map[coords[0]][coords[1]];  // jump value of the jumpy jump
-			int newFirst = coords[0] + jump;  // new first coordinate
-			int newSecond = coords[1] + jump;  // new second coordinate
-			if (newFirst < size && from[newFirst][coords[1]] == null) {  // if not out of bounds and node not visited
-				from[newFirst][coords[1]] = coords;  // save the current coords to the from of new coords
-				queue.add(new int[]{newFirst, coords[1]});  // add this new node to the queue
-				if (newFirst == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
+
+			// get jump value from said coordinate on map
+			int jump = map[coords[0]][coords[1]];
+
+			// calculate new vertical coordinate
+			int newVertical = coords[0] + jump;
+
+			// calculate new horizontal coordinate
+			int newHorizontal = coords[1] + jump;
+
+			// if new vertical coordinate doesn't jump over the edge and the target coordinates haven't been visited
+			if (newVertical < size && from[newVertical][coords[1]] == null) {
+
+				// save current coords to the "from" of new coords
+				from[newVertical][coords[1]] = coords;
+
+				// add new coords to the end of the queue
+				queue.add(new int[]{newVertical, coords[1]});
+
+				// if the new coordinates are the end coordinates, break out
+				if (newVertical == (size - 1) && coords[1] == (size - 1)) {
 					break;
 				}
 			}
-			if (newSecond < size && from[coords[0]][newSecond] == null) {  // if not out of bounds and node not visited
-				from[coords[0]][newSecond] = coords;  // save the current coords to the from of new coords
-				queue.add(new int[]{coords[0], newSecond});  // add this new node to the queue
-				if (coords[0] == (size - 1) && newSecond == (size - 1)) {  // if has reached the end, break out
+
+			// if new horizontal coordinate doesn't jump over the edge and the target coordinates haven't been visited
+			if (newHorizontal < size && from[coords[0]][newHorizontal] == null) {
+
+				// save current coords to the "from" of new coords
+				from[coords[0]][newHorizontal] = coords;
+
+				// add new coords to the end of the queue
+				queue.add(new int[]{coords[0], newHorizontal});
+
+				// if the new coordinates are the end coordinates, break out
+				if (coords[0] == (size - 1) && newHorizontal == (size - 1)) {
 					break;
 				}
 			}
 		}
-		if (!queue.isEmpty()) {  // solution was found
-			LinkedList<String> answer = new LinkedList<>();
-			int[] coords = new int[]{size - 1, size - 1};
-			while (true) {
-				int[] fromcoords = from[coords[0]][coords[1]];
-				if (fromcoords[0] == coords[0]) {
-					answer.push("E" + (coords[1] - fromcoords[1]));
-				}
-				else {
-					answer.push("S" + (coords[0] - fromcoords[0]));
-				}
-				coords = fromcoords;
-				if (fromcoords[0] == 0 && fromcoords[1] == 0) {
-					break;
-				}
-			}
-			return answer;
+
+		// solution was found
+		if (!queue.isEmpty()) {
+			return dijkstraAnswerBuilder(size, from);
 		}
-		else {  // solution was not found, null I guess
+
+		// solution wasn't found
+		else {
 			return null;
 		}
 	}
 
 	private static List<String> dijkstraApproxV1(int[][] map) {
+		// in case of map with size 0, return empty list
 		if (map.length == 1) {
 			return new ArrayList<>();
 		}
-		int size = map.length;  // edge length of the map
-		int[][][] from = new int[size][size][];  // array for storing the coordinates from which this coordinate was reached from
-		ArrayDeque<int[]> queue = new ArrayDeque<>();  // queue for storing next node
-		queue.add(new int[]{0, 0});  // throw starting point to queue
+
+		// edge length
+		int size = map.length;
+
+		// storing coordinate from which you can get to corresponding coordinate
+		int[][][] from = new int[size][size][];
+
+		// storing next coordinate to check
+		ArrayDeque<int[]> queue = new ArrayDeque<>();
+
+		// add starting coordinate to queue
+		queue.add(new int[]{0, 0});
+
+		// while there are nodes to check
 		while (!queue.isEmpty()) {
+
+			// get first coord from queue
 			int[] coords = queue.poll();
-			int jump = map[coords[0]][coords[1]];  // jump value of the jumpy jump
-			int newFirst = coords[0] + jump + 1;  // new first coordinate
-			int newSecond = coords[1] + jump + 1;  // new second coordinate
+
+			// get jump value from said coordinate on map
+			int jump = map[coords[0]][coords[1]];
+
+			// calculate new vertical coordinate maximum (the +1 version)
+			int newVertical = coords[0] + jump + 1;
+
+			// calculate new horizontal coordinate maximum (the +1 version)
+			int newHorizontal = coords[1] + jump + 1;
+
+			// boolean for checking if to break out of the while loop early if answer has been reached
 			boolean answerFound = false;
+
+			// loop through all the three options, +1, 0 and -1
 			for (int i = 0; i < 3; i++) {
-				if (newFirst < size && from[newFirst][coords[1]] == null) {  // if not out of bounds and node not visited
-					from[newFirst][coords[1]] = coords;  // save the current coords to the from of new coords
-					queue.add(new int[]{newFirst, coords[1]});  // add this new node to the queue
-					if (newFirst == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
+
+				// if new vertical coordinate doesn't jump over the edge and the target coordinates haven't been visited
+				if (newVertical < size && from[newVertical][coords[1]] == null) {
+
+					// save current coords to the "from" of new coords
+					from[newVertical][coords[1]] = coords;
+
+					// add new coords to the end of the queue
+					queue.add(new int[]{newVertical, coords[1]});
+
+					// if the new coordinates are the end coordinates, make the boolean true and break out
+					if (newVertical == (size - 1) && coords[1] == (size - 1)) {
 						answerFound = true;
 						break;
 					}
 				}
-				if (newSecond < size && from[coords[0]][newSecond] == null) {  // if not out of bounds and node not visited
-					from[coords[0]][newSecond] = coords;  // save the current coords to the from of new coords
-					queue.add(new int[]{coords[0], newSecond});  // add this new node to the queue
-					if (coords[0] == (size - 1) && newSecond == (size - 1)) {  // if has reached the end, break out
+
+				// if new horizontal coordinate doesn't jump over the edge and the target coordinates haven't been visited
+				if (newHorizontal < size && from[coords[0]][newHorizontal] == null) {
+
+					// save current coords to the "from" of new coords
+					from[coords[0]][newHorizontal] = coords;
+
+					// add new coords to the end of the queue
+					queue.add(new int[]{coords[0], newHorizontal});
+
+					// if the new coordinates are the end coordinates, make the boolean true and break out
+					if (coords[0] == (size - 1) && newHorizontal == (size - 1)) {
 						answerFound = true;
 						break;
 					}
 				}
-				newFirst--;
-				newSecond--;
+
+				// subtract one from each of the new coordinates
+				newVertical--;
+				newHorizontal--;
 			}
+
+			// if answer was found in the loop, break out
 			if (answerFound) {
 				break;
 			}
 		}
-		if (!queue.isEmpty()) {  // solution was found
-			LinkedList<String> answer = new LinkedList<>();
-			int[] coords = new int[]{size - 1, size - 1};
-			while (true) {
-				int[] fromcoords = from[coords[0]][coords[1]];
-				if (fromcoords[0] == coords[0]) {
-					answer.push("E" + (coords[1] - fromcoords[1]));
-				}
-				else {
-					answer.push("S" + (coords[0] - fromcoords[0]));
-				}
-				coords = fromcoords;
-				if (fromcoords[0] == 0 && fromcoords[1] == 0) {
-					break;
-				}
-			}
-			return answer;
+
+		// solution was found
+		if (!queue.isEmpty()) {
+			return dijkstraAnswerBuilder(size, from);
 		}
-		else {  // solution was not found, null I guess
-			System.out.println("no solution?");
+
+		// solution wasn't found
+		else {
 			return null;
 		}
 	}
