@@ -140,7 +140,7 @@ public class HW02 implements TrampolineCenter {
 					break;
 				}
 			}
-			if (newFirstMinus < size && from[newFirstMinus][coords[1]] == null) {  // if not out of bounds and node not visited
+			if (newFirstMinus < size && from[newFirstMinus][coords[1]] == null && newFirstMinus != 0) {  // if not out of bounds and node not visited
 				from[newFirstMinus][coords[1]] = coords;  // save the current coords to the from of new coords
 				queue.add(new int[]{newFirstMinus, coords[1]});  // add this new node to the queue
 				if (newFirstMinus == (size - 1) && coords[1] == (size - 1)) {  // if has reached the end, break out
@@ -161,7 +161,7 @@ public class HW02 implements TrampolineCenter {
 					break;
 				}
 			}
-			if (newSecondMinus < size && from[coords[0]][newSecondMinus] == null) {  // if not out of bounds and node not visited
+			if (newSecondMinus < size && from[coords[0]][newSecondMinus] == null && newSecondMinus != 0) {  // if not out of bounds and node not visited
 				from[coords[0]][newSecondMinus] = coords;  // save the current coords to the from of new coords
 				queue.add(new int[]{coords[0], newSecondMinus});  // add this new node to the queue
 				if (coords[0] == (size - 1) && newSecondMinus == (size - 1)) {  // if has reached the end, break out
