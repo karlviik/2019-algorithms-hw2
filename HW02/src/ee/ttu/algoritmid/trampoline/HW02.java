@@ -357,11 +357,10 @@ class aStar {
 
             int jump = map[location[0]][location[1]];
 
-            for (int i = 1; i > -2; i--) {
+            for (int i = 0; i > -1; i--) {
                 int modified = jump + i;
 
                 int newY = modified + location[0];
-
                 if (0 <= newY && newY < map.length && path[newY][location[1]] == null) {
                     int[] cur = new int[]{newY, location[1]};
                     queue.add(cur);
