@@ -301,7 +301,7 @@ public class HW02 implements TrampolineCenter {
 
     public static void main(String[] args) {
 //        int[][] map = new int[][]{{0, 0, 1, 100, 1}, {100, 300, 100, 100, 100}, {100, 100, 100, 100, 1}, {100, 100, 100, 100, 100}, {100, 100, 100, 100, 100}};
-        int[][] map = new int[][]{{0, 0, 3}, {0, 0, 0}, {3, 0, 0}};
+        int[][] map = new int[][]{{0, 0, 3}, {0, 0, 0}, {0, 0, 0}};
         System.out.println(aStar(map));
     }
 
@@ -320,13 +320,13 @@ public class HW02 implements TrampolineCenter {
 class aStar {
     private int[][] map;
     private int size;
-    private String[][] path;
+    private int[][][] path;
     private ArrayDeque<int[]> queue = new ArrayDeque<>();
 
     aStar(int[][] map) {
         this.map = map;
         this.size = map.length;
-        this.path = new String[size][size];
+        this.path = new int[size][size][2];
         queue.add(new int[]{0, 0});
 
     }
@@ -336,58 +336,48 @@ class aStar {
         while (!queue.isEmpty()) {
             int[] location = queue.poll();
 
+            if (location[0] == location[1] && location[1] == size - 1) {
+                List<String> answer = new ArrayList<>();
+                int[] place = new int[]{size - 1, size - 1};
+                while (place[0] != 0 || place[1] != 0) {
+                    int[] temp = path[place[0]][place[1]];
+
+                    if (temp[0] == 2) {
+                        place[0] -= temp[1];
+                        answer.add("S" + temp[1]);
+                    } else {
+                        place[1] -= temp[1];
+                        answer.add("E" + temp[1]);
+                    }
+
+                }
+                Collections.reverse(answer);
+                return answer;
+            }
+
             int jump = map[location[0]][location[1]];
 
             for (int i = 1; i > -2; i--) {
                 int modified = jump + i;
 
                 int newY = modified + location[0];
-                if (0 <= newY && newY < map.length && path[newY][location[1]] == null) {
+                if (0 <= newY && newY < map.length && path[newY][location[1]][0] == 0) {
                     int[] cur = new int[]{newY, location[1]};
                     queue.add(cur);
-                    path[newY][location[1]] = "S" + modified;
-
-                    List<String> answer = checkEnd(cur);
-
-                    if (answer != null) return answer;
-
+                    path[newY][location[1]][0] = 2;
+                    path[newY][location[1]][1] = modified;
                 }
 
                 int newX = modified + location[1];
-                if (0 <= newX && newX < map.length && path[location[0]][newX] == null) {
+                if (0 <= newX && newX < map.length && path[location[0]][newX][0] == 0) {
                     int[] cur = new int[]{location[0], newX};
                     queue.add(cur);
-                    path[location[0]][newX] = "E" + modified;
-
-                    List<String> answer = checkEnd(cur);
-
-                    if (answer != null) return answer;
+                    path[location[0]][newX][0] = 1;
+                    path[location[0]][newX][1] = modified;
                 }
 
             }
 
-        }
-        return null;
-    }
-
-    private List<String> checkEnd(int[] location) {
-        if (location[0] == location[1] && location[1] == size - 1) {
-            List<String> answer = new ArrayList<>();
-            int[] place = new int[]{size - 1, size - 1};
-            while (place[0] != 0 || place[1] != 0) {
-                String temp = path[place[0]][place[1]];
-                answer.add(temp);
-
-
-                if (temp.startsWith("S")) {
-                    place[0] -= Integer.parseInt(temp.replace("S", ""));
-                } else {
-                    place[1] -= Integer.parseInt(temp.replace("E", ""));
-                }
-
-            }
-            Collections.reverse(answer);
-            return answer;
         }
         return null;
     }
