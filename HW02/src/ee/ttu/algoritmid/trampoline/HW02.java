@@ -345,9 +345,9 @@ class aStar {
             int jump = map[location[0]][location[1]];
 //            map[location[0]][location[1]] = -1;
 
-//            if (jump < 0) {
-//                continue;
-//            }
+            if (jump < 0) {
+                continue;
+            }
 
             for (int i = 1; i > -2; i--) {
                 int modified = jump + i;
