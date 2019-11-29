@@ -342,45 +342,34 @@ class aStar {
             }
 
             int jump = map[location[0]][location[1]];
+            map[location[0]][location[1]] = -1;
 
             if (jump < 0) {
                 continue;
             }
 
-//            for (int i = 1; i > -2; i--) {
-//                int modified = jump + i;
-                int modified = jump;
+            for (int i = 1; i > -2; i--) {
+                int modified = jump + i;
 
                 if (modified < 0) {
                     continue;
                 }
 
                 int newY = modified + location[0];
-                if (0 <= newY && newY < map.length && map[newY][location[1]] >= 0) {
+                if (0 <= newY && newY < map.length) {
                     int[] cur = new int[]{newY, location[1]};
                     queue.add(cur);
                     path.put(cur, path.get(location) + ",S" + modified);
-                    if (newY == location[1] && location[1] == size - 1) {
-                        List<String> answer = new ArrayList<>(Arrays.asList(path.get(location).split(",")));
-                        answer.remove(0);
-                        return answer;
-                    }
                 }
 
                 int newX = modified + location[1];
-                if (0 <= newX && newX < map.length && map[location[0]][newX] >= 0) {
+                if (0 <= newX && newX < map.length) {
                     int[] cur = new int[]{location[0], newX};
                     queue.add(cur);
                     path.put(cur, path.get(location) + ",E" + modified);
-                    if (location[0] == newX && newX == size - 1) {
-                        List<String> answer = new ArrayList<>(Arrays.asList(path.get(location).split(",")));
-                        answer.remove(0);
-                        return answer;
-                    }
                 }
 
-//            }
-            map[location[0]][location[1]] = -1;
+            }
         }
         return null;
     }
