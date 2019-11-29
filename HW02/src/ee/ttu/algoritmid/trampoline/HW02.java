@@ -320,15 +320,15 @@ public class HW02 implements TrampolineCenter {
 class aStar {
     private int[][] map;
     private int size;
-    private HashMap<int[], String> path;
+    private String[][] path;
     private ArrayDeque<int[]> queue = new ArrayDeque<>();
 
     aStar(int[][] map) {
         this.map = map;
         this.size = map.length;
-        this.path = new HashMap<>();
+        this.path = new String[size][size];
         queue.add(new int[]{0, 0});
-        this.path.put(queue.peek(), "");
+
     }
 
     List<String> go() {
@@ -337,8 +337,20 @@ class aStar {
             int[] location = queue.poll();
 
             if (location[0] == location[1] && location[1] == size - 1) {
-                List<String> answer = new ArrayList<>(Arrays.asList(path.get(location).split(",")));
-                answer.remove(0);
+                List<String> answer = new ArrayList<>();
+                int[] place = new int[]{size - 1, size - 1};
+                while (place[0] != 0 || place[1] != 0) {
+                    String temp = path[place[0]][place[1]];
+                    answer.add(temp);
+
+                    if (temp.startsWith("S")) {
+                        place[0] -= Integer.parseInt(temp.replace("S", ""));
+                    } else {
+                        place[1] -= Integer.parseInt(temp.replace("E", ""));
+                    }
+
+                }
+                Collections.reverse(answer);
                 return answer;
             }
 
@@ -347,26 +359,23 @@ class aStar {
             for (int i = 1; i > -2; i--) {
                 int modified = jump + i;
 
-
                 int newY = modified + location[0];
-                if (0 <= newY && newY < map.length && !path.containsKey(new int[]{newY, location[1]})) {
+
+                if (0 <= newY && newY < map.length && path[newY][location[1]] == null) {
                     int[] cur = new int[]{newY, location[1]};
                     queue.add(cur);
-                    path.put(cur, path.get(location) + ",S" + modified);
+                    path[newY][location[1]] = "S" + modified;
                 }
 
                 int newX = modified + location[1];
-                if (0 <= newX && newX < map.length && !path.containsKey(new int[]{location[0], newX})) {
+                if (0 <= newX && newX < map.length && path[location[0]][newX] == null) {
                     int[] cur = new int[]{location[0], newX};
                     queue.add(cur);
-//                    System.out.println(Arrays.toString(cur));
-
-                    path.put(cur, path.get(location) + ",E" + modified);
+                    path[location[0]][newX] = "E" + modified;
                 }
 
             }
 
-            map[location[0]][location[1]] = -1;
         }
         return null;
     }
