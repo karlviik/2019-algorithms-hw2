@@ -296,96 +296,96 @@ public class HW02 implements TrampolineCenter {
 
     @Override
     public List<String> findMinJumps(int[][] map) {
-        return aStar(map);
+        return floodFill(map);
     }
 
     public static void main(String[] args) {
 //        int[][] map = new int[][]{{0, 0, 1, 100, 1}, {100, 300, 100, 100, 100}, {100, 100, 100, 100, 1}, {100, 100, 100, 100, 100}, {100, 100, 100, 100, 100}};
         int[][] map = new int[][]{{0, 0, 3}, {0, 0, 0}, {0, 0, 0}};
-        System.out.println(aStar(map));
+        System.out.println(dijkstraApproxV1(map));
     }
 
-    private static List<String> aStar(int[][] map) {
+    private static List<String> floodFill(int[][] map) {
         // in case of map with size 0, return empty list
         if (map.length == 1) {
             return new ArrayList<>();
         }
 
-        aStar aStar = new aStar(map);
-        return aStar.go();
+        FloodFill floodFill = new FloodFill(map);
+        return floodFill.flood();
     }
 
 }
 
-class aStar {
-    private int[][] map;
-    private int size;
-    private int[][][] path;
-    private ArrayDeque<int[]> queue = new ArrayDeque<>();
+class FloodFill {
+    private int[][] map;  // map itself
+    private int size;  // size of the map
+    private int[][][] path;  // color on specific coordinate
+    private ArrayDeque<int[]> queue = new ArrayDeque<>(); // O(n^2) complexity to flood all possible cells
 
-    aStar(int[][] map) {
+    FloodFill(int[][] map) {  // constructor with said arguments
         this.map = map;
         this.size = map.length;
-        this.path = new int[size][size][2];
-        queue.add(new int[]{0, 0});
+        this.path = new int[size][size][2];  // [map size][map size][color, relative parent location]
+        queue.add(new int[]{0, 0}); // starting location
 
     }
 
-    List<String> go() {
+    List<String> flood() { // flooding
 
-        while (!queue.isEmpty()) {
-            int[] location = queue.poll();
+        while (!queue.isEmpty()) { // flood while there are cells to flood
+            int[] location = queue.poll(); // get a cell to flood from
 
-            int jump = map[location[0]][location[1]];
+            int jump = map[location[0]][location[1]]; // get neighbours
 
             for (int i = 1; i > -2; i--) {
-                int modified = jump + i;
+                int modified = jump + i; // +-
 
-                int newY = modified + location[0];
-                if (0 <= newY && newY < map.length && path[newY][location[1]][0] == 0) {
-                    int[] cur = new int[]{newY, location[1]};
-                    queue.add(cur);
-                    path[newY][location[1]][0] = 2;
-                    path[newY][location[1]][1] = modified;
+                int newY = modified + location[0]; // Y row neighbours
+                if (0 <= newY && newY < map.length && path[newY][location[1]][0] == 0) { // if on map
+                    int[] cur = new int[]{newY, location[1]}; // get new location
+                    queue.add(cur); // add new location to be flooded from
+                    path[newY][location[1]][0] = 2; // color new location
+                    path[newY][location[1]][1] = modified; // add relative parent
 
-                    if (newY == location[1] && location[1] == size - 1) {
-                        return getAnswer();
+                    if (newY == location[1] && location[1] == size - 1) { // check end condition
+                        return getAnswer(); // return answer
                     }
                 }
 
-                int newX = modified + location[1];
-                if (0 <= newX && newX < map.length && path[location[0]][newX][0] == 0) {
-                    int[] cur = new int[]{location[0], newX};
-                    queue.add(cur);
-                    path[location[0]][newX][0] = 1;
-                    path[location[0]][newX][1] = modified;
+                int newX = modified + location[1]; // X row neighbours
+                if (0 <= newX && newX < map.length && path[location[0]][newX][0] == 0) { // inf on map
+                    int[] cur = new int[]{location[0], newX}; // get new location
+                    queue.add(cur); // add new location to be flooded from
+                    path[location[0]][newX][0] = 1; // color new location
+                    path[location[0]][newX][1] = modified; // add relative parent
 
-                    if (location[0] == newX && newX == size - 1) {
-                        return getAnswer();
+                    if (location[0] == newX && newX == size - 1) { // check end condition
+                        return getAnswer(); // return answer
                     }
                 }
             }
         }
-        return null;
+        return null; // no path was found
     }
 
     private List<String> getAnswer() {
-        List<String> answer = new ArrayList<>();
-        int[] place = new int[]{size - 1, size - 1};
-        while (place[0] != 0 || place[1] != 0) {
-            int[] temp = path[place[0]][place[1]];
+        List<String> answer = new ArrayList<>(); // answer
+        int[] place = new int[]{size - 1, size - 1}; // end position
+        while (place[0] != 0 || place[1] != 0) { // fill answer
+            int[] temp = path[place[0]][place[1]]; // get colored cell
 
-            if (temp[0] == 2) {
-                place[0] -= temp[1];
-                answer.add("S" + temp[1]);
-            } else {
-                place[1] -= temp[1];
-                answer.add("E" + temp[1]);
+            if (temp[0] == 2) { // if this color
+                place[0] -= temp[1]; // go to relative parent on Y row
+                answer.add("S" + temp[1]); // add color to answer
+            } else { // else that color
+                place[1] -= temp[1]; // go to relative parent on X row
+                answer.add("E" + temp[1]); // add color to answer
             }
 
         }
-        Collections.reverse(answer);
-        return answer;
+        Collections.reverse(answer); // Order from start to end
+        return answer; // return answer
     }
 
 }
