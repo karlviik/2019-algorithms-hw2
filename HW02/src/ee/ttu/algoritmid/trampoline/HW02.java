@@ -296,12 +296,12 @@ public class HW02 implements TrampolineCenter {
 
     @Override
     public List<String> findMinJumps(int[][] map) {
-        return dijkstraApproxV1(map);
+        return aStar(map);
     }
 
     public static void main(String[] args) {
 //        int[][] map = new int[][]{{0, 0, 1, 100, 1}, {100, 300, 100, 100, 100}, {100, 100, 100, 100, 1}, {100, 100, 100, 100, 100}, {100, 100, 100, 100, 100}};
-        int[][] map = new int[][]{{1, 2, 2}, {2, 10, 1}, {3, 2, 0}};
+        int[][] map = new int[][]{{0, 0, 3}, {0, 0, 0}, {3, 0, 0}};
         System.out.println(aStar(map));
     }
 
@@ -351,7 +351,7 @@ class aStar {
             for (int i = 1; i > -2; i--) {
                 int modified = jump + i;
 
-                if (modified < 0) {
+                if (modified <= 0) {
                     continue;
                 }
 
@@ -359,6 +359,7 @@ class aStar {
                 if (0 <= newY && newY < map.length) {
                     int[] cur = new int[]{newY, location[1]};
                     queue.add(cur);
+                    System.out.println(Arrays.toString(cur));
                     path.put(cur, path.get(location) + ",S" + modified);
                 }
 
@@ -366,6 +367,8 @@ class aStar {
                 if (0 <= newX && newX < map.length) {
                     int[] cur = new int[]{location[0], newX};
                     queue.add(cur);
+                    System.out.println(Arrays.toString(cur));
+
                     path.put(cur, path.get(location) + ",E" + modified);
                 }
 
