@@ -336,25 +336,6 @@ class aStar {
         while (!queue.isEmpty()) {
             int[] location = queue.poll();
 
-            if (location[0] == location[1] && location[1] == size - 1) {
-                List<String> answer = new ArrayList<>();
-                int[] place = new int[]{size - 1, size - 1};
-                while (place[0] != 0 || place[1] != 0) {
-                    int[] temp = path[place[0]][place[1]];
-
-                    if (temp[0] == 2) {
-                        place[0] -= temp[1];
-                        answer.add("S" + temp[1]);
-                    } else {
-                        place[1] -= temp[1];
-                        answer.add("E" + temp[1]);
-                    }
-
-                }
-                Collections.reverse(answer);
-                return answer;
-            }
-
             int jump = map[location[0]][location[1]];
 
             for (int i = 1; i > -2; i--) {
@@ -366,6 +347,10 @@ class aStar {
                     queue.add(cur);
                     path[newY][location[1]][0] = 2;
                     path[newY][location[1]][1] = modified;
+
+                    if (newY == location[1] && location[1] == size - 1) {
+                        return getAnswer();
+                    }
                 }
 
                 int newX = modified + location[1];
@@ -374,12 +359,33 @@ class aStar {
                     queue.add(cur);
                     path[location[0]][newX][0] = 1;
                     path[location[0]][newX][1] = modified;
-                }
 
+                    if (location[0] == newX && newX == size - 1) {
+                        return getAnswer();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private List<String> getAnswer() {
+        List<String> answer = new ArrayList<>();
+        int[] place = new int[]{size - 1, size - 1};
+        while (place[0] != 0 || place[1] != 0) {
+            int[] temp = path[place[0]][place[1]];
+
+            if (temp[0] == 2) {
+                place[0] -= temp[1];
+                answer.add("S" + temp[1]);
+            } else {
+                place[1] -= temp[1];
+                answer.add("E" + temp[1]);
             }
 
         }
-        return null;
+        Collections.reverse(answer);
+        return answer;
     }
 
 }
