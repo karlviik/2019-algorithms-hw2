@@ -356,14 +356,14 @@ class aStar {
                 }
 
                 int newY = modified + location[0];
-                if (0 <= newY && newY < map.length) {
+                if (0 <= newY && newY < map.length && map[newY][location[1]] >= 0) {
                     int[] cur = new int[]{newY, location[1]};
                     queue.add(cur);
                     path.put(cur, path.get(location) + ",S" + modified);
                 }
 
                 int newX = modified + location[1];
-                if (0 <= newX && newX < map.length) {
+                if (0 <= newX && newX < map.length && map[location[0]][newX] >= 0) {
                     int[] cur = new int[]{location[0], newX};
                     queue.add(cur);
                     path.put(cur, path.get(location) + ",E" + modified);
