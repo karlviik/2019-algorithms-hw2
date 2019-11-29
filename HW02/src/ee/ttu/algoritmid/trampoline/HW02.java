@@ -336,28 +336,9 @@ class aStar {
         while (!queue.isEmpty()) {
             int[] location = queue.poll();
 
-            if (location[0] == location[1] && location[1] == size - 1) {
-                List<String> answer = new ArrayList<>();
-                int[] place = new int[]{size - 1, size - 1};
-                while (place[0] != 0 || place[1] != 0) {
-                    String temp = path[place[0]][place[1]];
-                    answer.add(temp);
-
-
-                    if (temp.startsWith("S")) {
-                        place[0] -= Integer.parseInt(temp.replace("S", ""));
-                    } else {
-                        place[1] -= Integer.parseInt(temp.replace("E", ""));
-                    }
-
-                }
-                Collections.reverse(answer);
-                return answer;
-            }
-
             int jump = map[location[0]][location[1]];
 
-            for (int i = 0; i > -1; i--) {
+            for (int i = 1; i > -2; i--) {
                 int modified = jump + i;
 
                 int newY = modified + location[0];
@@ -365,6 +346,11 @@ class aStar {
                     int[] cur = new int[]{newY, location[1]};
                     queue.add(cur);
                     path[newY][location[1]] = "S" + modified;
+
+                    List<String> answer = checkEnd(cur);
+
+                    if (answer != null) return answer;
+
                 }
 
                 int newX = modified + location[1];
@@ -372,10 +358,36 @@ class aStar {
                     int[] cur = new int[]{location[0], newX};
                     queue.add(cur);
                     path[location[0]][newX] = "E" + modified;
+
+                    List<String> answer = checkEnd(cur);
+
+                    if (answer != null) return answer;
                 }
 
             }
 
+        }
+        return null;
+    }
+
+    private List<String> checkEnd(int[] location) {
+        if (location[0] == location[1] && location[1] == size - 1) {
+            List<String> answer = new ArrayList<>();
+            int[] place = new int[]{size - 1, size - 1};
+            while (place[0] != 0 || place[1] != 0) {
+                String temp = path[place[0]][place[1]];
+                answer.add(temp);
+
+
+                if (temp.startsWith("S")) {
+                    place[0] -= Integer.parseInt(temp.replace("S", ""));
+                } else {
+                    place[1] -= Integer.parseInt(temp.replace("E", ""));
+                }
+
+            }
+            Collections.reverse(answer);
+            return answer;
         }
         return null;
     }
