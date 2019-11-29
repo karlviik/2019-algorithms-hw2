@@ -343,6 +343,7 @@ class aStar {
                     String temp = path[place[0]][place[1]];
                     answer.add(temp);
 
+
                     if (temp.startsWith("S")) {
                         place[0] -= Integer.parseInt(temp.replace("S", ""));
                     } else {
