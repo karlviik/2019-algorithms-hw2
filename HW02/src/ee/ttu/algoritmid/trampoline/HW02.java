@@ -347,8 +347,9 @@ class aStar {
                 continue;
             }
 
-            for (int i = 1; i > -2; i--) {
-                int modified = jump + i;
+//            for (int i = 1; i > -2; i--) {
+//                int modified = jump + i;
+                int modified = jump;
 
                 if (modified < 0) {
                     continue;
@@ -368,7 +369,7 @@ class aStar {
                     path.put(cur, path.get(location) + ",E" + modified);
                 }
 
-            }
+//            }
             map[location[0]][location[1]] = -1;
         }
         return null;
