@@ -296,13 +296,11 @@ public class HW02 implements TrampolineCenter {
 
     @Override
     public List<String> findMinJumps(int[][] map) {
-        aStar(map);
-        HashMap<String, String> stringStringHashMap = new HashMap<>();
-        return Collections.singletonList(stringStringHashMap.get(Arrays.deepToString(map)));
+        return aStar(map);
     }
 
     public static void main(String[] args) {
-        int[][] map = new int[][]{{0, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
+        int[][] map = new int[][]{{0, 0, 1, 1, 1}, {0, 3, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}};
         System.out.println(aStar(map));
     }
 
