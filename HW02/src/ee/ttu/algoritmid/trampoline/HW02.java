@@ -300,7 +300,7 @@ public class HW02 implements TrampolineCenter {
     }
 
     public static void main(String[] args) {
-        int[][] map = new int[][]{{0, 0, 1, 1, 1}, {0, 3, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}};
+        int[][] map = new int[][]{{0, 0, 1, 100, 1}, {100, 300, 100, 100, 100}, {100, 100, 100, 100, 1}, {100, 100, 100, 100, 100}, {100, 100, 100, 100, 100}};
         System.out.println(aStar(map));
     }
 
@@ -357,14 +357,14 @@ class aStar {
                 if (0 <= newX && newX < map.length) {
                     int[] cur = new int[]{newX, location[1]};
                     queue.add(cur);
-                    path.put(cur, path.get(location) + ",E" + modified);
+                    path.put(cur, path.get(location) + ",S" + modified);
                 }
 
                 int newY = modified + location[1];
                 if (0 <= newY && newY < map.length) {
                     int[] cur = new int[]{location[0], newY};
                     queue.add(cur);
-                    path.put(cur, path.get(location) + ",S" + modified);
+                    path.put(cur, path.get(location) + ",E" + modified);
                 }
 
             }
