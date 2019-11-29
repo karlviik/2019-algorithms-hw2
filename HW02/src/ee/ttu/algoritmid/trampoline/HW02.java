@@ -300,7 +300,7 @@ public class HW02 implements TrampolineCenter {
     }
 
     public static void main(String[] args) {
-        int[][] map = new int[][]{{1, 2, 4}, {3, 10, 1}, {3, 2, 0}};
+        int[][] map = new int[][]{{0, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
         System.out.println(aStar(map));
     }
 
@@ -348,6 +348,10 @@ class aStar {
 
             for (int i = -1; i < 2; i++) {
                 int modified = jump + i;
+
+                if (modified < 0) {
+                    continue;
+                }
 
                 int newX = modified + location[0];
                 if (0 <= newX && newX < map.length) {
