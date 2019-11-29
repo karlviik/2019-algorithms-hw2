@@ -360,6 +360,11 @@ class aStar {
                     int[] cur = new int[]{newY, location[1]};
                     queue.add(cur);
                     path.put(cur, path.get(location) + ",S" + modified);
+                    if (newY == location[1] && location[1] == size - 1) {
+                        List<String> answer = new ArrayList<>(Arrays.asList(path.get(location).split(",")));
+                        answer.remove(0);
+                        return answer;
+                    }
                 }
 
                 int newX = modified + location[1];
@@ -367,6 +372,11 @@ class aStar {
                     int[] cur = new int[]{location[0], newX};
                     queue.add(cur);
                     path.put(cur, path.get(location) + ",E" + modified);
+                    if (location[0] == newX && newX == size - 1) {
+                        List<String> answer = new ArrayList<>(Arrays.asList(path.get(location).split(",")));
+                        answer.remove(0);
+                        return answer;
+                    }
                 }
 
 //            }
