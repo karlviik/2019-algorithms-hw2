@@ -296,7 +296,9 @@ public class HW02 implements TrampolineCenter {
 
     @Override
     public List<String> findMinJumps(int[][] map) {
-        return aStar(map);
+        aStar(map);
+        HashMap<String, String> stringStringHashMap = new HashMap<>();
+        return Collections.singletonList(stringStringHashMap.get(Arrays.deepToString(map)));
     }
 
     public static void main(String[] args) {
@@ -346,7 +348,7 @@ class aStar {
                 continue;
             }
 
-            for (int i = -1; i < 2; i++) {
+            for (int i = 1; i > -2; i--) {
                 int modified = jump + i;
 
                 if (modified < 0) {
