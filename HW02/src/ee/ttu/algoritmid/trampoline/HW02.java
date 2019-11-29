@@ -296,7 +296,7 @@ public class HW02 implements TrampolineCenter {
 
     @Override
     public List<String> findMinJumps(int[][] map) {
-        return floodFill(map);
+        return dijkstraApproxV1(map);
     }
 
     public static void main(String[] args) {
