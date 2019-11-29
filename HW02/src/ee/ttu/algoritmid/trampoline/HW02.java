@@ -328,6 +328,7 @@ class aStar {
         this.size = map.length;
         this.path = new HashMap<>();
         queue.add(new int[]{0, 0});
+        this.path.put(queue.peek(), "");
     }
 
     List<String> go() {
@@ -342,32 +343,32 @@ class aStar {
             }
 
             int jump = map[location[0]][location[1]];
-            map[location[0]][location[1]] = -1;
+//            map[location[0]][location[1]] = -1;
 
-            if (jump < 0) {
-                continue;
-            }
+//            if (jump < 0) {
+//                continue;
+//            }
 
             for (int i = 1; i > -2; i--) {
                 int modified = jump + i;
 
-                if (modified <= 0) {
-                    continue;
-                }
+//                if (modified <= 0) {
+//                    continue;
+//                }
 
                 int newY = modified + location[0];
-                if (0 <= newY && newY < map.length) {
+                if (0 <= newY && newY < map.length && !path.containsKey(new int[]{newY, location[1]})) {
                     int[] cur = new int[]{newY, location[1]};
                     queue.add(cur);
-                    System.out.println(Arrays.toString(cur));
+//                    System.out.println(Arrays.toString(cur));
                     path.put(cur, path.get(location) + ",S" + modified);
                 }
 
                 int newX = modified + location[1];
-                if (0 <= newX && newX < map.length) {
+                if (0 <= newX && newX < map.length && !path.containsKey(new int[]{location[0], newX})) {
                     int[] cur = new int[]{location[0], newX};
                     queue.add(cur);
-                    System.out.println(Arrays.toString(cur));
+//                    System.out.println(Arrays.toString(cur));
 
                     path.put(cur, path.get(location) + ",E" + modified);
                 }
