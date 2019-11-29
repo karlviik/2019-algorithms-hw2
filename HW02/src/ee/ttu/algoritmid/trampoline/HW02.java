@@ -350,9 +350,9 @@ class aStar {
             for (int i = 1; i > -2; i--) {
                 int modified = jump + i;
 
-//                if (modified < 0) {
-//                    continue;
-//                }
+                if (modified < 0) {
+                    continue;
+                }
 
                 int newY = modified + location[0];
                 if (0 <= newY && newY < map.length) {
