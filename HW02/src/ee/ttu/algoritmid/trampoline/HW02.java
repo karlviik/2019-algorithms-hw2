@@ -343,24 +343,16 @@ class aStar {
             }
 
             int jump = map[location[0]][location[1]];
-//            map[location[0]][location[1]] = -1;
-
-            if (jump < 0) {
-                continue;
-            }
+            
 
             for (int i = 1; i > -2; i--) {
                 int modified = jump + i;
 
-//                if (modified <= 0) {
-//                    continue;
-//                }
 
                 int newY = modified + location[0];
                 if (0 <= newY && newY < map.length && !path.containsKey(new int[]{newY, location[1]})) {
                     int[] cur = new int[]{newY, location[1]};
                     queue.add(cur);
-//                    System.out.println(Arrays.toString(cur));
                     path.put(cur, path.get(location) + ",S" + modified);
                 }
 
@@ -374,6 +366,8 @@ class aStar {
                 }
 
             }
+
+//            map[location[0]][location[1]] = -1;
         }
         return null;
     }
